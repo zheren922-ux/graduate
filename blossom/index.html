@@ -12,6 +12,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
+            /* 如果你想用背景图片，可以把下面这行换成：background: url('background/你的背景图.jpg') center/cover; */
             background: linear-gradient(135deg, #fff0f3 0%, #ffccd5 100%);
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
             display: flex;
@@ -79,12 +80,18 @@
 
         /* 花束样式 */
         .bouquet {
-            font-size: 8rem; /* 如果换成图片，这里改为 width: 200px; */
             margin-bottom: 30px;
             opacity: 0;
             transform: scale(0.8);
             transition: all 1.5s ease-out 1.5s;
             filter: drop-shadow(0 10px 15px rgba(201, 24, 74, 0.2));
+        }
+
+        /* 图片自适应大小限制 */
+        .bouquet img {
+            width: 250px; /* 你可以根据实际照片大小调整这里 */
+            height: auto;
+            object-fit: contain;
         }
 
         /* 小熊与气泡容器 */
@@ -99,8 +106,13 @@
 
         /* 小熊样式 */
         .bear {
-            font-size: 6rem; /* 如果换成图片，这里改为 width: 120px; */
             animation: float 3s ease-in-out infinite;
+        }
+
+        .bear img {
+            width: 150px; /* 你可以根据实际照片大小调整这里 */
+            height: auto;
+            object-fit: contain;
         }
 
         /* 气泡样式 */
@@ -143,9 +155,10 @@
 </head>
 <body>
 
-    <!-- 背景音乐：建议放入一首像 Serious Bacon 那样带有木吉他扫弦、旋律温柔的泰式轻音乐 -->
+    <!-- 音乐从 music 文件夹提取 -->
     <audio id="bgm" loop>
-        <source src="your-soft-music.mp3" type="audio/mpeg">
+        <!-- 将你准备好的轻快吉他曲或纯音乐重命名，放在 music 文件夹下 -->
+        <source src="music/serious-bacon.mp3" type="audio/mpeg">
     </audio>
 
     <canvas id="sakura-canvas"></canvas>
@@ -154,12 +167,17 @@
 
     <div class="content-container" id="content">
         <h1 class="title">毕业快乐</h1>
-        <!-- 把这里的 💐 换成 <img src="你的花束图片路径.png" alt="花束"> -->
-        <div class="bouquet">💐</div>
+        
+        <!-- 花束照片从 background 文件夹提取 -->
+        <div class="bouquet">
+            <img src="background/bouquet.png" alt="毕业花束">
+        </div>
         
         <div class="bear-section">
-            <!-- 把这里的 🧸 换成 <img src="你的小熊图片路径.png" alt="小熊"> -->
-            <div class="bear">🧸</div>
+            <!-- 小熊照片从 background 文件夹提取 -->
+            <div class="bear">
+                <img src="background/bear.png" alt="小熊">
+            </div>
             <div class="speech-bubble">毕业快乐，祝你前程似锦 ✨</div>
         </div>
     </div>
@@ -241,7 +259,7 @@
             startBtn.style.opacity = '0';
             setTimeout(() => { startBtn.style.display = 'none'; }, 300);
 
-            // 2. 播放柔和的音乐 (如果本地没有音频文件，这里可能会在控制台报错，但不影响画面)
+            // 2. 播放柔和的音乐
             bgm.volume = 0.5;
             bgm.play().catch(e => console.log("等待本地加入真实的音频文件"));
 
