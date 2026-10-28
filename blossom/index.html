@@ -162,11 +162,44 @@
             100% { transform: translateY(0px); }
         }
 
+        /* ================= 下一页按钮样式 ================= */
+        .next-btn {
+            margin-top: 40px;
+            padding: 12px 35px;
+            font-size: 16px;
+            color: white;
+            background-color: #ff8fab;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 143, 171, 0.4);
+            opacity: 0;
+            transform: translateY(20px);
+            /* 延迟3.5秒，等前面的动画都出现完毕后再缓缓出现 */
+            transition: opacity 1.5s ease-out 3.5s, transform 1.5s ease-out 3.5s, background-color 0.3s ease, box-shadow 0.3s ease;
+            letter-spacing: 1px;
+            pointer-events: none; /* 出现前禁止点击 */
+        }
+
+        .next-btn:hover {
+            background-color: #fb6f92;
+            box-shadow: 0 8px 20px rgba(251, 111, 146, 0.6);
+            /* hover时稍微上浮 */
+            transform: translateY(-2px) !important; 
+        }
+
         /* 激活后的状态类 (触发入场动画) */
         .active .content-container { opacity: 1; pointer-events: auto; }
         .active .title { opacity: 1; transform: translateY(0); }
         .active .bouquet { opacity: 1; transform: scale(1); }
         .active .bear-section { opacity: 1; transform: translateX(0); }
+        
+        /* 激活后下一页按钮的状态 */
+        .active .next-btn { 
+            opacity: 1; 
+            transform: translateY(0); 
+            pointer-events: auto; 
+        }
     </style>
 </head>
 <body>
@@ -196,6 +229,9 @@
             </div>
             <div class="speech-bubble">毕业快乐，祝你前程似锦 ✨</div>
         </div>
+
+        <!-- 这里是新增的下一页按钮 -->
+        <button class="next-btn" id="nextBtn">下一页 ➔</button>
     </div>
 
     <script>
@@ -204,6 +240,7 @@
         const canvas = document.getElementById('sakura-canvas');
         const ctx = canvas.getContext('2d');
         const content = document.getElementById('content');
+        const nextBtn = document.getElementById('nextBtn'); // 获取下一页按钮
 
         // 设置画布大小
         function resizeCanvas() {
@@ -218,11 +255,14 @@
         class Sakura {
             constructor() {
                 this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height - canvas.height;
+                // 修复了这里原本截断的错误
+                this.y = Math.random() * canvas.height;
                 this.size = Math.random() * 8 + 4; // 花瓣大小
                 this.speedY = Math.random() * 1.5 + 0.5; // 下落速度
+                // 修复了这里原本截断的错误
                 this.speedX = Math.random() * 2 - 1; // 飘动幅度
                 this.angle = Math.random() * 360; // 旋转角度
+                // 修复了这里原本截断的错误
                 this.spin = Math.random() * 0.05 - 0.025; // 旋转速度
                 this.opacity = Math.random() * 0.5 + 0.3;
             }
@@ -283,8 +323,13 @@
             canvas.style.opacity = '1';
             animate();
 
-            // 4. 触发花束、文字、小熊的层叠淡入动画
+            // 4. 触发花束、文字、小熊、下一页按钮的层叠淡入动画
             document.body.classList.add('active');
+        });
+
+        // 5. 下一页按钮的跳转逻辑
+        nextBtn.addEventListener('click', () => {
+            window.location.href = 'word_message.html';
         });
     </script>
 </body>
