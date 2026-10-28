@@ -12,7 +12,6 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            /* 如果你想用背景图片，可以把下面这行换成：background: url('background/你的背景图.jpg') center/cover; */
             background: linear-gradient(135deg, #fff0f3 0%, #ffccd5 100%);
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
             display: flex;
@@ -78,21 +77,38 @@
             transition: all 1.5s ease-out 0.5s;
         }
 
-        /* 花束样式 */
+        /* ================= 花束样式与微风动画 ================= */
         .bouquet {
             margin-bottom: 30px;
             opacity: 0;
             transform: scale(0.8);
-            transition: all 1.5s ease-out 1.5s;
+            /* 花束容器的入场动画 */
+            transition: all 1.5s ease-out 1.5s; 
             filter: drop-shadow(0 10px 15px rgba(201, 24, 74, 0.2));
         }
 
-        /* 图片自适应大小限制 */
         .bouquet img {
-            width: 250px; /* 你可以根据实际照片大小调整这里 */
+            width: 250px; /* 控制花束图片大小 */
             height: auto;
             object-fit: contain;
         }
+
+        /* 定义呼吸与摇曳的关键帧动画 */
+        @keyframes bouquet-breathe {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.03) rotate(2deg); /* 微微放大并右倾 */ }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        /* 当按钮被点击，页面激活后，给图片挂载微风动画 */
+        .active .bouquet img {
+            animation: bouquet-breathe 4s ease-in-out infinite;
+            /* 延迟3秒执行，等待容器的入场动画完全结束，避免动作冲突 */
+            animation-delay: 3s; 
+            /* 设置旋转的中心点在花束的底部，这样摇摆更真实 */
+            transform-origin: bottom center; 
+        }
+        /* ====================================================== */
 
         /* 小熊与气泡容器 */
         .bear-section {
@@ -110,7 +126,7 @@
         }
 
         .bear img {
-            width: 150px; /* 你可以根据实际照片大小调整这里 */
+            width: 150px;
             height: auto;
             object-fit: contain;
         }
@@ -146,7 +162,7 @@
             100% { transform: translateY(0px); }
         }
 
-        /* 激活后的状态类 */
+        /* 激活后的状态类 (触发入场动画) */
         .active .content-container { opacity: 1; pointer-events: auto; }
         .active .title { opacity: 1; transform: translateY(0); }
         .active .bouquet { opacity: 1; transform: scale(1); }
@@ -157,7 +173,7 @@
 
     <!-- 音乐从 music 文件夹提取 -->
     <audio id="bgm" loop>
-        <!-- 将你准备好的轻快吉他曲或纯音乐重命名，放在 music 文件夹下 -->
+        <!-- 将你准备好的轻快吉他曲重命名为 serious-bacon.mp3，放在 music 文件夹下 -->
         <source src="music/serious-bacon.mp3" type="audio/mpeg">
     </audio>
 
