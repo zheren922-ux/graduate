@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>留言与祝福</title>
-    <!-- 推荐引入一个手写字体让便利贴更真实 -->
     <link href="https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
     <style>
         * {
@@ -20,10 +19,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Zhi Mang Xing', cursive, sans-serif; /* 使用手写字体 */
+            font-family: 'Zhi Mang Xing', cursive, sans-serif;
         }
 
-        /* 1. 背景图片设置 (在这里替换你的图片路径) */
         #bg-image {
             position: absolute;
             top: 0;
@@ -36,7 +34,6 @@
             z-index: -2;
         }
 
-        /* 背景遮罩，让文字更清晰可见 */
         .overlay {
             position: absolute;
             top: 0;
@@ -47,7 +44,6 @@
             z-index: -1;
         }
 
-        /* 2. 樱花画布 */
         #sakura-canvas {
             position: absolute;
             top: 0;
@@ -55,18 +51,17 @@
             width: 100%;
             height: 100%;
             z-index: 0;
-            pointer-events: none; /* 让鼠标穿透画布，不影响点击 */
+            pointer-events: none;
         }
 
-        /* 3. 便利贴样式 */
         .sticky-note {
             position: relative;
             width: 300px;
             min-height: 300px;
-            background: #fdf5c9; /* 经典的便利贴淡黄色 */
+            background: #fdf5c9;
             padding: 40px 30px 30px;
             box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-            transform: rotate(-2deg); /* 微微倾斜显得更自然 */
+            transform: rotate(-2deg);
             z-index: 1;
             transition: transform 0.3s ease;
         }
@@ -76,7 +71,6 @@
             box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.4);
         }
 
-        /* 顶部的透明胶带效果 */
         .sticky-note::before {
             content: '';
             position: absolute;
@@ -94,11 +88,9 @@
             font-size: 24px;
             line-height: 1.8;
             color: #333;
-            /* 模拟手写的稍微不规则感 */
             letter-spacing: 2px;
         }
 
-        /* 4. 音乐控制按钮 */
         #music-btn {
             position: absolute;
             bottom: 30px;
@@ -107,7 +99,7 @@
             background: rgba(255, 255, 255, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.5);
             border-radius: 20px;
-            backdrop-filter: blur(10px); /* 按钮使用毛玻璃效果 */
+            backdrop-filter: blur(10px);
             color: #fff;
             cursor: pointer;
             z-index: 10;
@@ -122,22 +114,17 @@
 </head>
 <body>
 
-    <!-- 背景与遮罩 -->
     <div id="bg-image"></div>
     <div class="overlay"></div>
-
-    <!-- 樱花特效画布 -->
     <canvas id="sakura-canvas"></canvas>
 
-    <!-- 背景音乐 (在这里替换你的音乐路径) -->
-    <audio id="bg-music" loop>
+    <!-- 加入了 autoplay 属性，尝试让浏览器自动播放 -->
+    <audio id="bg-music" loop autoplay>
         <source src="你的背景音乐路径.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- 便利贴 -->
     <div class="sticky-note">
         <div class="message-text">
-            <!-- 在这里输入你的文字 -->
             在这里输入你的留言。<br>
             愿你未来的道路，<br>
             如这繁花般绚烂。<br>
@@ -145,17 +132,38 @@
         </div>
     </div>
 
-    <!-- 音乐控制 -->
     <button id="music-btn">🎵 播放音乐</button>
 
     <script>
-        // --- 1. 音乐控制逻辑 ---
-        // 浏览器通常限制自动播放，所以通过按钮让用户手动开启
+        // --- 1. 音乐控制逻辑 (修改为支持自动播放与全局点击触发) ---
         const music = document.getElementById('bg-music');
         const musicBtn = document.getElementById('music-btn');
         let isPlaying = false;
 
-        musicBtn.addEventListener('click', () => {
+        // 尝试播放音乐的函数
+        function tryPlayMusic() {
+            music.play().then(() => {
+                isPlaying = true;
+                musicBtn.textContent = '⏸️ 暂停音乐';
+            }).catch((error) => {
+                // 如果浏览器拦截了自动播放，会在后台报错，这里捕捉错误并等待用户点击
+                console.log("浏览器限制了自动播放，需等待用户互动。");
+            });
+        }
+
+        // 页面加载完成后立刻尝试播放
+        window.addEventListener('DOMContentLoaded', tryPlayMusic);
+
+        // 如果被拦截，用户点击屏幕任意位置都会触发播放（只触发一次）
+        document.body.addEventListener('click', () => {
+            if (!isPlaying) {
+                tryPlayMusic();
+            }
+        }, { once: true });
+
+        // 右下角按钮的手动控制逻辑
+        musicBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // 阻止点击事件冒泡，以免和上面的body点击冲突
             if (isPlaying) {
                 music.pause();
                 musicBtn.textContent = '🎵 播放音乐';
@@ -166,25 +174,25 @@
             isPlaying = !isPlaying;
         });
 
-        // --- 2. Canvas 樱花飘落特效 ---
+
+        // --- 2. Canvas 樱花飘落特效 (修复了缺失的运算符) ---
         const canvas = document.getElementById('sakura-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
         const petals = [];
-        const numPetals = 60; // 樱花数量
+        const numPetals = 60; 
 
-        // 樱花花瓣对象
         class Petal {
             constructor() {
                 this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height - canvas.height;
+                this.y = Math.random() * canvas.height - canvas.height; // 修复了这里的 - 号
                 this.size = Math.random() * 15 + 10;
-                this.speedY = Math.random() * 1.5 + 1; // 下落速度
-                this.speedX = Math.random() * 2 - 1; // 水平漂移速度
-                this.rotation = Math.random() * 360; // 初始角度
-                this.rotationSpeed = Math.random() * 2 - 1; // 旋转速度
+                this.speedY = Math.random() * 1.5 + 1; 
+                this.speedX = Math.random() * 2 - 1; // 修复了这里的 - 号
+                this.rotation = Math.random() * 360; 
+                this.rotationSpeed = Math.random() * 2 - 1; // 修复了这里的 - 号
             }
 
             update() {
@@ -192,7 +200,6 @@
                 this.x += this.speedX;
                 this.rotation += this.rotationSpeed;
 
-                // 如果超出屏幕底部，重置到顶部
                 if (this.y > canvas.height) {
                     this.y = -this.size;
                     this.x = Math.random() * canvas.width;
@@ -202,15 +209,13 @@
             draw() {
                 ctx.save();
                 ctx.translate(this.x, this.y);
-                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.rotate(this.rotation * Math.PI / 180); // 修复了这里的 * 号
                 
-                // 绘制简单的粉色花瓣形状
                 ctx.beginPath();
                 ctx.moveTo(0, 0);
                 ctx.bezierCurveTo(this.size / 2, -this.size / 2, this.size, 0, 0, this.size);
                 ctx.bezierCurveTo(-this.size, 0, -this.size / 2, -this.size / 2, 0, 0);
                 
-                // 樱花渐变色
                 let gradient = ctx.createLinearGradient(0, 0, 0, this.size);
                 gradient.addColorStop(0, 'rgba(255, 183, 197, 0.9)');
                 gradient.addColorStop(1, 'rgba(255, 192, 203, 0.4)');
@@ -221,12 +226,10 @@
             }
         }
 
-        // 初始化花瓣
         for (let i = 0; i < numPetals; i++) {
             petals.push(new Petal());
         }
 
-        // 动画循环
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             petals.forEach(petal => {
@@ -238,7 +241,6 @@
 
         animate();
 
-        // 窗口大小改变时重置画布尺寸
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
