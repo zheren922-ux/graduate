@@ -28,8 +28,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* 👇 1. 在单引号内填入你的背景图片文件名 */
-            background-image: url('word_message.jpg'); 
+            /* 指向 background 文件夹中的图片 */
+            background-image: url('background/word_message.jpg'); 
             background-size: cover;
             background-position: center;
             z-index: -2;
@@ -119,9 +119,9 @@
     <div class="overlay"></div>
     <canvas id="sakura-canvas"></canvas>
 
-    <!-- 👇 2. 在 src 属性中填入你的音乐文件名 -->
+    <!-- 指向 music 文件夹中的音频文件，并修正了 src 属性 -->
     <audio id="bg-music" loop autoplay>
-        <source music="jay2.mp3" type="audio/mpeg">
+        <source src="music/jay2.mp3" type="audio/mpeg">
     </audio>
 
     <div class="sticky-note">
