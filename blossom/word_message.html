@@ -28,7 +28,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('你的背景图片路径.jpg'); 
+            /* 👇 1. 在单引号内填入你的背景图片文件名 */
+            background-image: url('word_message.jpg'); 
             background-size: cover;
             background-position: center;
             z-index: -2;
@@ -118,9 +119,9 @@
     <div class="overlay"></div>
     <canvas id="sakura-canvas"></canvas>
 
-    <!-- 加入了 autoplay 属性，尝试让浏览器自动播放 -->
+    <!-- 👇 2. 在 src 属性中填入你的音乐文件名 -->
     <audio id="bg-music" loop autoplay>
-        <source src="你的背景音乐路径.mp3" type="audio/mpeg">
+        <source src="jay2.mp3" type="audio/mpeg">
     </audio>
 
     <div class="sticky-note">
@@ -135,35 +136,30 @@
     <button id="music-btn">🎵 播放音乐</button>
 
     <script>
-        // --- 1. 音乐控制逻辑 (修改为支持自动播放与全局点击触发) ---
+        // --- 1. 音乐控制逻辑 ---
         const music = document.getElementById('bg-music');
         const musicBtn = document.getElementById('music-btn');
         let isPlaying = false;
 
-        // 尝试播放音乐的函数
         function tryPlayMusic() {
             music.play().then(() => {
                 isPlaying = true;
                 musicBtn.textContent = '⏸️ 暂停音乐';
             }).catch((error) => {
-                // 如果浏览器拦截了自动播放，会在后台报错，这里捕捉错误并等待用户点击
                 console.log("浏览器限制了自动播放，需等待用户互动。");
             });
         }
 
-        // 页面加载完成后立刻尝试播放
         window.addEventListener('DOMContentLoaded', tryPlayMusic);
 
-        // 如果被拦截，用户点击屏幕任意位置都会触发播放（只触发一次）
         document.body.addEventListener('click', () => {
             if (!isPlaying) {
                 tryPlayMusic();
             }
         }, { once: true });
 
-        // 右下角按钮的手动控制逻辑
         musicBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // 阻止点击事件冒泡，以免和上面的body点击冲突
+            e.stopPropagation(); 
             if (isPlaying) {
                 music.pause();
                 musicBtn.textContent = '🎵 播放音乐';
@@ -175,7 +171,7 @@
         });
 
 
-        // --- 2. Canvas 樱花飘落特效 (修复了缺失的运算符) ---
+        // --- 2. Canvas 樱花飘落特效 ---
         const canvas = document.getElementById('sakura-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -187,12 +183,12 @@
         class Petal {
             constructor() {
                 this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height - canvas.height; // 修复了这里的 - 号
+                this.y = Math.random() * canvas.height - canvas.height; 
                 this.size = Math.random() * 15 + 10;
                 this.speedY = Math.random() * 1.5 + 1; 
-                this.speedX = Math.random() * 2 - 1; // 修复了这里的 - 号
+                this.speedX = Math.random() * 2 - 1; 
                 this.rotation = Math.random() * 360; 
-                this.rotationSpeed = Math.random() * 2 - 1; // 修复了这里的 - 号
+                this.rotationSpeed = Math.random() * 2 - 1; 
             }
 
             update() {
@@ -209,7 +205,7 @@
             draw() {
                 ctx.save();
                 ctx.translate(this.x, this.y);
-                ctx.rotate(this.rotation * Math.PI / 180); // 修复了这里的 * 号
+                ctx.rotate(this.rotation * Math.PI / 180); 
                 
                 ctx.beginPath();
                 ctx.moveTo(0, 0);
